@@ -1,0 +1,23 @@
+# Editors
+project.xml
+project.properties
+/nbproject/private/
+.buildpath
+.project
+.settings*
+.idea
+
+# Sass
+.sass-cache
+
+# Dependencies
+/node_modules/
+/deploy/
+/vendor/
+/dist/
+
+# OS X metadata
+.DS_Store
+
+# Windows junk
+Thumbs.db

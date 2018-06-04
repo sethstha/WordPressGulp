@@ -1,9 +1,8 @@
 /**
  * Gulp workflow for WordPress
- * 
+ *
  * @author Sanjeev Shrestha
  * @version 1.0.0
- * 
  */
 
 /**
@@ -132,7 +131,7 @@ var paths = {
 function browserSyncStart( cb ) {
 	browserSync.init(
 		{
-			proxy: themeInfo.localUrl
+			proxy: info.localUrl
 		},
 		cb
 	);
@@ -292,7 +291,7 @@ function compressZip() {
 
 // Watch for file changes
 function watch() {
-	gulp.watch( paths.scss.src, [ styles, browserSyncStream ] );
+	gulp.watch( paths.scss.src, gulp.series( styles, browserSyncStream ) );
 	gulp.watch( [ paths.js.src, paths.php.src ], browserSyncReload );
 }
 

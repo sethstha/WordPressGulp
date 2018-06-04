@@ -15,6 +15,7 @@ project.properties
 /deploy/
 /vendor/
 /dist/
+package-lock.json
 
 # OS X metadata
 .DS_Store

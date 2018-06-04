@@ -1,4 +1,44 @@
-// Theme Info
+/**
+ * Gulp workflow for WordPress
+ * 
+ * @author Sanjeev Shrestha
+ * @version 1.0.0
+ * 
+ */
+
+/**
+ * Load Plugins
+ *
+ * Load gulp and it's plugin.
+ */
+var gulp = require( 'gulp' );
+
+// CSS Plugins
+var autoprefixer = require( 'gulp-autoprefixer' ); // Prefixes CSS.
+var uglifycss = require( 'gulp-uglifycss' ); // Minifies CSS.
+var rtlcss = require( 'gulp-rtlcss' ); // Generates RTL CSS.
+var sass = require( 'gulp-sass' ); // Compiles sass into CSS.
+
+// JS Plugins
+var uglify = require( 'gulp-uglify' ); // Minify JS.
+
+// Utility Plugins
+var browserSync = require( 'browser-sync' ).create(); // Reloads browser.
+var imagemin = require( 'gulp-imagemin' ); // Minifies Images.
+var rename = require( 'gulp-rename' ); // Renames files.
+var wpPot = require( 'gulp-wp-pot' ); // Generates translation file.
+var zip = require( 'gulp-zip' ); // Compresses into zip file.
+var notify = require( 'gulp-notify' ); // Sends notification.
+
+// Linter Plugins
+var stylelint = require( 'gulp-stylelint' ); // Checks for the CSS errors.
+var eslint = require( 'gulp-eslint' ); // Checks for the JS errors.
+var phpcs = require( 'gulp-phpcs' ); //Checks for the php errors and WordPress standards.
+
+
+/**
+ * Project information.
+ */
 var info = {
 	name: 'WordPressGulp',
 	slug: 'wordpressgulp',
@@ -10,7 +50,9 @@ var info = {
 	localUrl: 'localhost/wordpressgulp'
 };
 
-// Define paths
+/**
+ * Defines paths
+ */
 var paths = {
 	scss: {
 		src: './assets/sass/**/*.scss',
@@ -85,35 +127,6 @@ var paths = {
 		dest: './dist'
 	}
 };
-
-/**
- * Load Plugins
- *
- * Load gulp and it's plugin.
- */
-var gulp = require( 'gulp' );
-
-// CSS Plugins
-var autoprefixer = require( 'gulp-autoprefixer' ); // Prefixes CSS.
-var uglifycss = require( 'gulp-uglifycss' ); // Minifies CSS.
-var rtlcss = require( 'gulp-rtlcss' ); // Generates RTL CSS.
-var sass = require( 'gulp-sass' ); // Compiles sass into CSS.
-
-// JS Plugins
-var uglify = require( 'gulp-uglify' ); // Minify JS.
-
-// Utility Plugins
-var browserSync = require( 'browser-sync' ).create(); // Reloads browser.
-var imagemin = require( 'gulp-imagemin' ); // Minifies Images.
-var rename = require( 'gulp-rename' ); // Renames files.
-var wpPot = require( 'gulp-wp-pot' ); // Generates translation file.
-var zip = require( 'gulp-zip' ); // Compresses into zip file.
-var notify = require( 'gulp-notify' ); // Sends notification.
-
-// Linter Plugins
-var stylelint = require( 'gulp-stylelint' ); // Checks for the CSS errors.
-var eslint = require( 'gulp-eslint' ); // Checks for the JS errors.
-var phpcs = require( 'gulp-phpcs' ); //Checks for the php errors and WordPress standards.
 
 // Start browserSync
 function browserSyncStart( cb ) {

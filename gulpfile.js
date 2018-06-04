@@ -69,7 +69,7 @@ var paths = {
 	},
 
 	prefixStyles: {
-		src: [ './style.css', './style-rtl.css' ],
+		src: './*.css',
 		dest: './'
 	},
 

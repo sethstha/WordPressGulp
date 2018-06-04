@@ -127,6 +127,24 @@ var paths = {
 	}
 };
 
+/**
+ * Gulp Series Tasks
+ *
+ * Run task on series.
+ */
+
+//  Style tasks
+var styles = gulp.series( compileSass, prefixStyles, generateRTLCSS, browserSyncStream );
+
+// Start a front-end development server.
+var server = gulp.series( browserSyncStart, watch );
+
+// Test code
+var test = gulp.series( lintPHP, lintJS, lintStyle );
+
+// Build
+var build = gulp.series( test, minifyCSS, minifyJs, minifyImg, generatePotFile, compressZip );
+
 // Start browserSync
 function browserSyncStart( cb ) {
 	browserSync.init(
@@ -291,28 +309,10 @@ function compressZip() {
 
 // Watch for file changes
 function watch() {
-	gulp.watch( paths.scss.src, gulp.series( styles, browserSyncStream ) );
+	gulp.watch( paths.scss.src, styles  );
 	gulp.watch( [ paths.js.src, paths.php.src ], browserSyncReload );
 }
 
-/**
- * Series of task to easily do works.
- */
-
-// Runs Style tasks.
-function styles() {
-	return gulp.series( compileSass, prefixStyles, generateRTLCSS );
-}
-
-// Starts front-end developement server.
-function server() {
-	return gulp.series( browserSyncStart, watch );
-}
-
-// Tests code agains WPCS.
-function test() {
-	return gulp.series( lintStyle, lintPHP, lintJS );
-}
 
 // Builds the package.
 function build() {
@@ -347,8 +347,8 @@ exports.lintStyle = lintStyle;
 exports.lintJS = lintJS;
 exports.compressZip = compressZip;
 exports.watch = watch;
-exports.styles = styles();
-exports.test = test();
-exports.server = server();
-exports.test = test();
-exports.build = build();
+exports.styles = styles;
+exports.test = test;
+exports.server = server;
+exports.test = test;
+exports.build = build;

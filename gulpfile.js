@@ -178,6 +178,7 @@ function compileSass() {
 				outputStyle: 'expanded'
 			} )
 		)
+		.pipe( gulp.dest( paths.scss.dest ) )
 		.on( 'error', notify.onError() );
 }
 

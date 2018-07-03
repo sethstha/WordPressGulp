@@ -28,6 +28,9 @@ var rename = require( 'gulp-rename' ); // Renames files.
 var wpPot = require( 'gulp-wp-pot' ); // Generates translation file.
 var zip = require( 'gulp-zip' ); // Compresses into zip file.
 var notify = require( 'gulp-notify' ); // Sends notification.
+var webfontgenerator = require( 'webfonts-generator' ); // Generates iconfont from svg.
+var globby = require( 'globby' ); // Glob pattern file matcher.
+var readme = require( 'gulp-readme-to-markdown' ); // Generates markdown readme from txt.
 
 // Linter Plugins
 var stylelint = require( 'gulp-stylelint' ); // Checks for the CSS errors.
@@ -46,7 +49,8 @@ var info = {
 	authorUrl: 'https://github.com/sethstha/',
 	authorEmail: 'sethstha@gmail.com',
 	teamEmail: '',
-	localUrl: 'localhost/wordpressgulp'
+	localUrl: 'localhost/wordpressgulp',
+	version: '1.0.0'
 };
 
 /**
@@ -56,6 +60,13 @@ var paths = {
 	scss: {
 		src: './assets/sass/**/*.scss',
 		dest: './'
+	},
+
+	iconfont: {
+		svgSrc: getGlobFiles( 'assets/svg/*.svg' ),
+		fontDest: './assets/fonts',
+		cssDest: './assets/css/' + info.slug + '-icon.css',
+		cssFontPath: '../fonts'
 	},
 
 	css: {
@@ -134,7 +145,7 @@ var paths = {
  */
 
 //  Style tasks
-var styles = gulp.series( compileSass, prefixStyles, generateRTLCSS, browserSyncStream );
+var styles = gulp.series( compileSass, generateRTLCSS, prefixStyles );
 
 // Start a front-end development server.
 var server = gulp.series( browserSyncStart, watch );
@@ -179,6 +190,7 @@ function compileSass() {
 			} )
 		)
 		.pipe( gulp.dest( paths.scss.dest ) )
+		.pipe( browserSync.stream() )
 		.on( 'error', notify.onError() );
 }
 
@@ -195,6 +207,28 @@ function prefixStyles() {
 		.pipe( gulp.dest( paths.prefixStyles.dest ) )
 		.pipe( browserSync.stream() )
 		.on( 'error', notify.onError() );
+}
+
+// Genrates iconfont from svgs.
+function generateIconfont( cb ) {
+	webfontgenerator(
+		{
+			fontName: info.slug + '-icons',
+			files: paths.iconfont.svgSrc,
+			dest: paths.iconfont.fontDest,
+			cssDest: paths.iconfont.cssDest,
+			cssFontsUrl: paths.iconfont.cssFontPath
+		},
+		cb
+	);
+}
+
+// Generates readme.md from readme.txt
+function generateReadme() {
+	return gulp
+		.src( './readme.txt' )
+		.pipe( readme() )
+		.pipe( gulp.dest( './' ) );
 }
 
 // Generates RTL CSS file.
@@ -310,26 +344,16 @@ function compressZip() {
 
 // Watch for file changes
 function watch() {
-	gulp.watch( paths.scss.src, styles  );
+	gulp.watch( paths.scss.src, compileSass );
 	gulp.watch( [ paths.js.src, paths.php.src ], browserSyncReload );
 }
 
 
-// Builds the package.
-function build() {
-	return gulp.series(
-		lintPHP,
-		lintJS,
-		lintStyle,
-		compileSass,
-		prefixStyles,
-		generateRTLCSS,
-		minifyCSS,
-		minifyImg,
-		minifyJs,
-		generatePotFile,
-		compressZip
-	);
+// Gets file url from glob pattern
+function getGlobFiles( path ) {
+	out = [];
+	out = out.concat( globby.sync( path ) );
+	return out;
 }
 
 // define tasks
@@ -342,6 +366,8 @@ exports.generateRTLCSS = generateRTLCSS;
 exports.minifyCSS = minifyCSS;
 exports.minifyImg = minifyImg;
 exports.minifyJs = minifyJs;
+exports.generateIconfont = generateIconfont;
+exports.generateReadme = generateReadme;
 exports.generatePotFile = generatePotFile;
 exports.lintPHP = lintPHP;
 exports.lintStyle = lintStyle;
